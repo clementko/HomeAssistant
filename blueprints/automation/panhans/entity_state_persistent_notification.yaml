@@ -12,18 +12,7 @@ blueprint:
 
     - periodical notification with stop functionality
 
-
-    **Hints**
-
-    - if you want to test this automation, you need to change the state of an observed person. you can do this, in the developer options. Simply filter for your person entity, click on it and change the state to a zone used by this automation.
-
-
-    **Help & FAQ**: [Yet not another door/window/sensor open warning notification with auto close and reminder](https://community.home-assistant.io/t/yet-not-another-door-window-sensor-open-warning-notification-with-auto-close-and-reminder)
-
-
-    **Version**: 2.2.1
-
-  source_url: https://github.com/panhans/homeassistant/blob/main/blueprints/automation/panhans/entity_state_persistent_notification.yaml
+  source_url: https://github.com/clementko/homeassistant/blob/main/blueprints/automation/panhans/entity_state_persistent_notification.yaml
   domain: automation
 
   input:
@@ -89,6 +78,13 @@ blueprint:
       selector:
         boolean:
 
+    auto_clear_notification:
+      name: Clear Notification
+      description: Would you like the notification be auto cleared?
+      default: true
+      selector:
+        boolean:
+
     period:
       name: Periodical Notification
       description: Sends notification periodically
@@ -148,6 +144,7 @@ variables:
   sensor_entity: !input sensor_entity
   group_target: !input notify_group
   ha_notification: !input ha_notification
+  auto_clear_notification: !input auto_clear_notification
   notify_device: !input notify_device
   period: !input period
   action_prefix: "STOP_{{this.entity_id}}"
@@ -300,16 +297,20 @@ action:
               message: !input message
               notification_id: "{{ tag }}"
     else:
-      - service: notify.notify
-        data:
-          data:
-            tag: "{{ tag }}"
-            ttl: 0
-            priority: high
-          message: clear_notification
-      - service: persistent_notification.dismiss
-        data:
-          notification_id: "{{ tag }}"
+      - if:
+          - condition: template
+            value_template: "{{ auto_clear_notification }}"
+        then:
+          - service: notify.notify
+            data:
+              data:
+                tag: "{{ tag }}"
+                ttl: 0
+                priority: high
+              message: clear_notification
+          - service: persistent_notification.dismiss
+            data:
+              notification_id: "{{ tag }}"
 
   - if:
       - condition: template
