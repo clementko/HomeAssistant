@@ -296,11 +296,10 @@ action:
               title: !input title
               message: !input message
               notification_id: "{{ tag }}"
-    else:
-      - if:
-        - condition: template
-          value_template: "{{ auto_clear_notification }}"
-      - then:
+    - if:
+      condition: template
+      value_template: "{{ not (is_period_trigger or trigger.to_state.state == active_state) and auto_clear_notification }}"
+    then:
         - service: notify.notify
           data:
             data:
