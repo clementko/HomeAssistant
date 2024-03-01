@@ -297,6 +297,9 @@ action:
               message: !input message
               notification_id: "{{ tag }}"
     else:
+      - if:
+      - condition: template
+        value_template: "{{ ha_notification }}"
       - service: notify.notify
         data:
           data:
