@@ -297,20 +297,16 @@ action:
               message: !input message
               notification_id: "{{ tag }}"
     else:
-        - if:
-            - condition: template
-              value_template: "{{ auto_clear_notification }}"
-        - then:
-            - service: notify.notify
-              data:
-                data:
-                  tag: "{{ tag }}"
-                  ttl: 0
-                  priority: high
-                message: clear_notification
-            - service: persistent_notification.dismiss
-              data:
-                notification_id: "{{ tag }}"
+      - service: notify.notify
+        data:
+          data:
+            tag: "{{ tag }}"
+            ttl: 0
+            priority: high
+          message: clear_notification
+      - service: persistent_notification.dismiss
+        data:
+          notification_id: "{{ tag }}"
 
   - if:
       - condition: template
