@@ -12,18 +12,7 @@ blueprint:
 
     - periodical notification with stop functionality
 
-
-    **Hints**
-
-    - if you want to test this automation, you need to change the state of an observed person. you can do this, in the developer options. Simply filter for your person entity, click on it and change the state to a zone used by this automation.
-
-
-    **Help & FAQ**: [Yet not another door/window/sensor open warning notification with auto close and reminder](https://community.home-assistant.io/t/yet-not-another-door-window-sensor-open-warning-notification-with-auto-close-and-reminder)
-
-
-    **Version**: 2.2.1
-
-  source_url: https://github.com/panhans/homeassistant/blob/main/blueprints/automation/panhans/entity_state_persistent_notification.yaml
+  source_url: https://github.com/clementko/homeassistant/blob/main/blueprints/automation/panhans/entity_state_persistent_notification.yaml
   domain: automation
 
   input:
@@ -85,6 +74,13 @@ blueprint:
     persistent_notification:
       name: Persistent Notification
       description: Would you like a persistent or a closable notification?
+      default: true
+      selector:
+        boolean:
+
+    clean_Notification:
+      name: Clean Notification
+      description: Would you like the notification be cleared?
       default: true
       selector:
         boolean:
