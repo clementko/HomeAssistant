@@ -78,9 +78,9 @@ blueprint:
       selector:
         boolean:
 
-    clean_Notification:
-      name: Clean Notification
-      description: Would you like the notification be cleared?
+    auto_clear_notification:
+      name: Auto Clear Notification
+      description: Would you like the notification be auto cleared?
       default: true
       selector:
         boolean:
@@ -144,6 +144,7 @@ variables:
   sensor_entity: !input sensor_entity
   group_target: !input notify_group
   ha_notification: !input ha_notification
+  auto_clear_notification: !input auto_clear_notification
   notify_device: !input notify_device
   period: !input period
   action_prefix: "STOP_{{this.entity_id}}"
@@ -296,16 +297,20 @@ action:
               message: !input message
               notification_id: "{{ tag }}"
     else:
-      - service: notify.notify
-        data:
+      - if:
+        - condition: template
+          value_template: "{{ auto_clear_notification }}"
+      - then:
+        - service: notify.notify
           data:
-            tag: "{{ tag }}"
-            ttl: 0
-            priority: high
-          message: clear_notification
-      - service: persistent_notification.dismiss
-        data:
-          notification_id: "{{ tag }}"
+            data:
+              tag: "{{ tag }}"
+              ttl: 0
+              priority: high
+            message: clear_notification
+        - service: persistent_notification.dismiss
+          data:
+            notification_id: "{{ tag }}"
 
   - if:
       - condition: template
